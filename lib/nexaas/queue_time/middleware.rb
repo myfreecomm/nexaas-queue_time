@@ -30,7 +30,7 @@ module Nexaas
       def send_metric(metric)
         return unless metric
 
-        Datadog::Statsd.open('localhost', 8125) do |statsd|
+        Datadog::Statsd.open(nil, nil, socket_path: '/var/run/datadog/dsd.socket') do |statsd|
           statsd.timing(METRIC_NAME, metric.to_i, sample_rate: 1)
         end
       end
