@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/myfreecomm/nexaas-queue_time.svg?branch=master)](https://travis-ci.org/myfreecomm/nexaas-queue_time)
 # Nexaas::QueueTime
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/nexaas/queue_time`. To experiment with that code, run `bin/console` for an interactive prompt.
