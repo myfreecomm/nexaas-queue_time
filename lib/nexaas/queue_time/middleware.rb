@@ -25,7 +25,14 @@ module Nexaas
         entered_queue = env['HTTP_X_REQUEST_START']
         return nil if entered_queue.nil?
 
+        entered_queue = extract_timestamp(entered_queue)
         (left_queue - entered_queue.to_f) * 1000
+      end
+
+      # The header actually comes as `t=1234567890`,
+      # so we need to extract the timestamp.
+      def extract_timestamp(entered_queue)
+        entered_queue.delete('t=')
       end
 
       def send_metric(metric)

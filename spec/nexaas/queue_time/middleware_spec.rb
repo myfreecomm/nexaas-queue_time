@@ -12,7 +12,7 @@ RSpec.describe Nexaas::QueueTime::Middleware do
     let(:queue_time) { 0.5 }
     let(:request_start) { Time.now.to_f - queue_time }
     let(:request_env) do
-      { 'PATH_INFO' => '/index', 'HTTP_X_REQUEST_START' => request_start }
+      { 'PATH_INFO' => '/index', 'HTTP_X_REQUEST_START' => "t=#{request_start}" }
     end
 
     it 'does not alter request' do
