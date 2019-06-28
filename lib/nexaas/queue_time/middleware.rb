@@ -8,7 +8,8 @@ module Nexaas
       METRIC_NAME = 'request.queue_time'
 
       def initialize(app)
-        @app = app end
+        @app = app
+      end
 
       def call(env)
         left_queue = Time.now.to_f
