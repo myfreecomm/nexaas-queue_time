@@ -8,8 +8,7 @@ module Nexaas
       METRIC_NAME = 'request.queue_time'
 
       def initialize(app)
-        @app = app
-      end
+        @app = app end
 
       def call(env)
         left_queue = Time.now.to_f
@@ -23,12 +22,16 @@ module Nexaas
 
       def queue_time_in_ms(left_queue, env)
         entered_queue = env['HTTP_X_REQUEST_START']
-        (left_queue - entered_queue) * 1000
+        return nil if entered_queue.nil?
+
+        (left_queue - entered_queue.to_f) * 1000
       end
 
       def send_metric(metric)
+        return unless metric
+
         Datadog::Statsd.open('localhost', 8125) do |statsd|
-          statsd.timing(METRIC_NAME, metric, sample_rate: 1)
+          statsd.timing(METRIC_NAME, metric.to_i, sample_rate: 1)
         end
       end
     end

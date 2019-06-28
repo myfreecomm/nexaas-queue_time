@@ -32,5 +32,39 @@ RSpec.describe Nexaas::QueueTime::Middleware do
       )
       subject.call(request_env)
     end
+
+    context 'when HTTP_X_REQUEST_START is given as string' do
+      let(:request_start) { (Time.now.to_f - queue_time).to_s }
+
+      it 'sends metric to statsd' do
+        queue_time_in_ms = queue_time * 1000
+        expect_any_instance_of(Datadog::Statsd).to receive(:timing).with(
+          described_class::METRIC_NAME,
+          be_within(0.3).of(queue_time_in_ms),
+          sample_rate: 1
+        )
+        subject.call(request_env)
+      end
+    end
+
+    context 'when HTTP_X_REQUEST_START is not given' do
+      before :each do
+        request_env.delete('HTTP_X_REQUEST_START')
+      end
+
+      it 'does not alter request' do
+        http_code, env, body = subject.call(request_env)
+
+        expect(http_code).to eq(200)
+        expect(env).to eq(request_env)
+        expect(body).to eq(['OK'])
+      end
+
+      it 'does not send metric to statsd' do
+        expect_any_instance_of(Datadog::Statsd).not_to receive(:timing)
+
+        subject.call(request_env)
+      end
+    end
   end
 end
