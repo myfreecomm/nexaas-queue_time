@@ -12,20 +12,20 @@ module Nexaas
       end
 
       def call(env)
-        left_queue_at = Time.now.to_f
-        metric = queue_time_in_ms(left_queue_at, env)
-        send_metric(metric)
+        request_start_header = env['HTTP_X_REQUEST_START']
+        if request_start_header
+          left_queue_at = Time.now.to_f
+          metric = calculate_queue_time_in_ms(left_queue_at, request_start_header)
+          send_metric(metric)
+        end
 
         @app.call(env)
       end
 
       private
 
-      def queue_time_in_ms(left_queue_at, env)
-        entered_queue_at = env['HTTP_X_REQUEST_START']
-        return nil if entered_queue_at.nil?
-
-        entered_queue_at = extract_timestamp(entered_queue_at)
+      def calculate_queue_time_in_ms(left_queue_at, request_start_header)
+        entered_queue_at = extract_timestamp(request_start_header)
         (left_queue_at - entered_queue_at.to_f) * 1000
       end
 
@@ -36,8 +36,6 @@ module Nexaas
       end
 
       def send_metric(metric)
-        return unless metric
-
         Datadog::Statsd.open(nil, nil, socket_path: '/var/run/datadog/dsd.socket') do |statsd|
           statsd.timing(METRIC_NAME, metric.to_i, sample_rate: 1)
         end
