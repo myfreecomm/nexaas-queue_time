@@ -12,8 +12,8 @@ module Nexaas
       end
 
       def call(env)
-        left_queue = Time.now.to_f
-        metric = queue_time_in_ms(left_queue, env)
+        left_queue_at = Time.now.to_f
+        metric = queue_time_in_ms(left_queue_at, env)
         send_metric(metric)
 
         @app.call(env)
@@ -21,12 +21,12 @@ module Nexaas
 
       private
 
-      def queue_time_in_ms(left_queue, env)
-        entered_queue = env['HTTP_X_REQUEST_START']
-        return nil if entered_queue.nil?
+      def queue_time_in_ms(left_queue_at, env)
+        entered_queue_at = env['HTTP_X_REQUEST_START']
+        return nil if entered_queue_at.nil?
 
-        entered_queue = extract_timestamp(entered_queue)
-        (left_queue - entered_queue.to_f) * 1000
+        entered_queue_at = extract_timestamp(entered_queue_at)
+        (left_queue_at - entered_queue_at.to_f) * 1000
       end
 
       # The header actually comes as `t=1234567890`,
