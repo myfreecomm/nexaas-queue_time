@@ -4,6 +4,16 @@ require 'datadog/statsd'
 
 module Nexaas
   module QueueTime
+    # This middleware calculates the time a request has been waiting
+    #   in the queue before being served by the application server.
+    #
+    # It requires the header `X_REQUEST_START`. This header contains
+    #   the timestamp of when the request first apperead in the stack.
+    # This header is usually set by a LoadBalancer, Reverse Proxy or Router.
+    #
+    # The format of the header **must** match:
+    #   `t=TIMESTAMP`, where TIMESTAMP is the unix timestamp.
+    # This format is supported by APMs such as New Relic and Scout
     class Middleware
       METRIC_NAME = 'request.queue_time'
 
@@ -35,6 +45,14 @@ module Nexaas
         entered_queue.delete('t=')
       end
 
+      # By default, Datadog::Statsd opens a UDP connection with a given host and port.
+      # Instead, we are giving it a socket path so it communicates with the statsd server via UDS.
+      #
+      # This approach is easier to setup in containerized environments since all it requires
+      # is the path to the socket file instead of the host address.
+      #
+      # UDS also performs better than UDP,
+      # although the app would need to receive huge traffic to actually feel the difference.
       def send_metric(metric)
         Datadog::Statsd.open(nil, nil, socket_path: '/var/run/datadog/dsd.socket') do |statsd|
           statsd.timing(METRIC_NAME, metric.to_i, sample_rate: 1)
