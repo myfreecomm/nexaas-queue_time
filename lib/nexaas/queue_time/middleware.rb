@@ -31,7 +31,7 @@ module Nexaas
 
       def call(env)
         request_start_header = env['HTTP_X_REQUEST_START']
-        if request_start_header&.match?(HEADER_FORMAT_PATTERN)
+        if request_start_header && request_start_header =~ HEADER_FORMAT_PATTERN
           left_queue_at = Time.now.to_f
           metric = calculate_queue_time_in_ms(left_queue_at, request_start_header)
           send_metric(metric)
