@@ -16,6 +16,14 @@ module Nexaas
     # This format is supported by APMs such as New Relic and Scout
     class Middleware
       METRIC_NAME = 'request.queue_time'
+      HEADER_FORMAT_PATTERN = /
+        ^   # Beginning of line
+        t=  #
+        \d+ # At least 1 digit
+        \.? # Optionally a dot may be used for fractional timestamps
+        \d* # Optionally more digits after the dot
+        $   # End of line
+      /x
 
       def initialize(app)
         @app = app
@@ -23,7 +31,7 @@ module Nexaas
 
       def call(env)
         request_start_header = env['HTTP_X_REQUEST_START']
-        if request_start_header
+        if request_start_header&.match?(HEADER_FORMAT_PATTERN)
           left_queue_at = Time.now.to_f
           metric = calculate_queue_time_in_ms(left_queue_at, request_start_header)
           send_metric(metric)
@@ -39,8 +47,6 @@ module Nexaas
         (left_queue_at - entered_queue_at.to_f) * 1000
       end
 
-      # The header actually comes as `t=1234567890`,
-      # so we need to extract the timestamp.
       def extract_timestamp(entered_queue)
         entered_queue.delete('t=')
       end
