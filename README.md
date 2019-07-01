@@ -1,9 +1,6 @@
 [![Build Status](https://travis-ci.org/myfreecomm/nexaas-queue_time.svg?branch=master)](https://travis-ci.org/myfreecomm/nexaas-queue_time)
 # Nexaas::QueueTime
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/nexaas/queue_time`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
@@ -23,7 +20,32 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Rails initialization
+Add this gem to the Middleware stack before `Rack::Runtime`, like this:
+
+```ruby
+require "nexaas/queue_time/middleware"
+config.middleware.insert_before Rack::Runtime, Nexaas::QueueTime::Middleware
+```
+You can place it in `config/application.rb` or in a specific environment file, such as `config/environments/production.rb`
+
+This code can also be placed in an initializer file, such as `config/initializers/middlewares.rb`:
+```ruby
+Rails.env.on(:any) do |config|
+  require "nexaas/queue_time/middleware"
+  config.middleware.insert_before Rack::Runtime, Nexaas::QueueTime::Middleware
+end
+```
+
+### Header requirement
+For the gem to work, someone **must** set the header `X-Request-Start` with the format `t=timestamp`, where `timestamp` is the UNIX timestamp.
+This someone could be a load balancer, reverse proxy or router. Heroku already does that for you automatically.
+
+### DogStatsD
+
+After calculating the `queue_time`, this gem sends it to a [DogStatsD](https://docs.datadoghq.com/developers/dogstatsd/) server via [UDS](https://en.wikipedia.org/wiki/Unix_domain_socket).
+
+Without the _DogStatsD_ agent this gem is pretty much useless.
 
 ## Development
 
@@ -33,7 +55,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/nexaas-queue_time.
+Bug reports and pull requests are welcome on GitHub at https://github.com/myfreecomm/nexaas-queue_time.
 
 ## License
 
