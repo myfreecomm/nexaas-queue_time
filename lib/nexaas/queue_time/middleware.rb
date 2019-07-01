@@ -5,14 +5,14 @@ require 'datadog/statsd'
 module Nexaas
   module QueueTime
     # This middleware calculates the time a request has been waiting
-    #   in the queue before being served by the application server.
+    # in the queue before being served by the application server.
     #
     # It requires the header `X_REQUEST_START`. This header contains
-    #   the timestamp of when the request first apperead in the stack.
+    # the timestamp of when the request first apperead in the stack.
     # This header is usually set by a LoadBalancer, Reverse Proxy or Router.
     #
-    # The format of the header **must** match:
-    #   `t=TIMESTAMP`, where TIMESTAMP is the unix timestamp.
+    # The format of the header *must* match:
+    # `t=TIMESTAMP`, where TIMESTAMP is the unix timestamp.
     # This format is supported by APMs such as New Relic and Scout
     class Middleware
       METRIC_NAME = 'request.queue_time'
