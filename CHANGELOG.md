@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2019-07-01
+
+### Added
+
+- Document middleware class
+- Test for header pattern before calculating `queue_time`
+
+### Changed
+
+- Do not calculate `queue_time` if header is not present
+
+### Fixed
+
+- Use `String =~` instead of `String#match?` due to Ruby 2.3
+
 ## [0.2.0] - 2019-06-28
 
 ### Fixed
