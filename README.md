@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/myfreecomm/nexaas-queue_time.svg?branch=master)](https://travis-ci.org/myfreecomm/nexaas-queue_time)
+[![Gem Version](https://badge.fury.io/rb/nexaas-queue_time.svg)](https://badge.fury.io/rb/nexaas-queue_time)
 # Nexaas::QueueTime
 
 
