@@ -8,7 +8,7 @@ module Nexaas
     # Measures the latency for all Sidekiq queues
     # and send it to Datadog.
     class Sidekiq
-      METRIC_NAME = 'sidekiq.queue.latency'
+      METRIC_NAME = 'sidekiq.queue.latency_ms'
 
       def self.measure_latency
         ::Sidekiq::Queue.all.each do |queue|
