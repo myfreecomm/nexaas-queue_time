@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'nexaas/queue_time/sidekiq'
+
+loop do
+  Nexaas::QueueTime::Sidekiq.measure_latency
+  sleep 10
+end

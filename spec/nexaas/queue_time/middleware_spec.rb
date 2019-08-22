@@ -26,18 +26,9 @@ RSpec.describe Nexaas::QueueTime::Middleware do
       expect(body).to eq(['OK'])
     end
 
-    it 'opens socket connection' do
-      expect(Datadog::Statsd).to receive(:open).with(
-        nil,
-        nil,
-        socket_path: '/var/run/datadog/dsd.socket'
-      )
-      subject.call(request_env)
-    end
-
     it 'sends metric to statsd' do
       queue_time_in_ms = queue_time * 1000
-      expect_any_instance_of(Datadog::Statsd).to receive(:timing).with(
+      expect(Nexaas::QueueTime::DogStatsd).to receive(:timing).with(
         described_class::METRIC_NAME,
         be_within(0.3).of(queue_time_in_ms),
         sample_rate: 1
@@ -51,7 +42,7 @@ RSpec.describe Nexaas::QueueTime::Middleware do
 
       it 'sends metric to statsd' do
         queue_time_in_ms = queue_time * 1000
-        expect_any_instance_of(Datadog::Statsd).to receive(:timing).with(
+        expect(Nexaas::QueueTime::DogStatsd).to receive(:timing).with(
           described_class::METRIC_NAME,
           be_within(2000).of(queue_time_in_ms),
           sample_rate: 1
@@ -65,7 +56,7 @@ RSpec.describe Nexaas::QueueTime::Middleware do
 
       it 'sends metric to statsd' do
         queue_time_in_ms = queue_time * 1000
-        expect_any_instance_of(Datadog::Statsd).to receive(:timing).with(
+        expect(Nexaas::QueueTime::DogStatsd).to receive(:timing).with(
           described_class::METRIC_NAME,
           be_within(0.3).of(queue_time_in_ms),
           sample_rate: 1
@@ -88,7 +79,7 @@ RSpec.describe Nexaas::QueueTime::Middleware do
       end
 
       it 'does not send metric to statsd' do
-        expect_any_instance_of(Datadog::Statsd).not_to receive(:timing)
+        expect(Nexaas::QueueTime::DogStatsd).not_to receive(:timing)
 
         subject.call(request_env)
       end
@@ -108,7 +99,7 @@ RSpec.describe Nexaas::QueueTime::Middleware do
       end
 
       it 'does not send metric to statsd' do
-        expect_any_instance_of(Datadog::Statsd).not_to receive(:timing)
+        expect(Nexaas::QueueTime::DogStatsd).not_to receive(:timing)
 
         subject.call(request_env)
       end
