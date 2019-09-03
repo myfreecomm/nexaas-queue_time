@@ -48,6 +48,10 @@ After calculating the `queue_time`, this gem sends it to a [DogStatsD](https://d
 
 Without the _DogStatsD_ agent this gem is pretty much useless.
 
+### Sidekiq metrics collector
+
+This gem comes with a binary called `sidekiq_metric_collector`. This binary will send to _DogStatsD_ the latency for all Sidekiq queues every 10 seconds.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
