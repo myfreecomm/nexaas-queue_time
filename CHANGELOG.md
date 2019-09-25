@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2019-09-25
+
+### Added
+
+- Set Redis namespace when needed
+
 ## [0.4.0] - 2019-08-22
 
 ### Added
@@ -39,3 +45,4 @@ All notable changes to this project will be documented in this file.
 [0.2.0]: https://github.com/myfreecomm/nexaas-queue_time/compare/v0.1.0...v0.2.0/
 [0.3.0]: https://github.com/myfreecomm/nexaas-queue_time/compare/v0.2.0...v0.3.0/
 [0.4.0]: https://github.com/myfreecomm/nexaas-queue_time/compare/v0.3.0...v0.4.0/
+[0.4.0]: https://github.com/myfreecomm/nexaas-queue_time/compare/v0.4.0...v0.5.0/
