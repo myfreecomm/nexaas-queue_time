@@ -11,7 +11,7 @@ module Nexaas
       METRIC_NAME = 'sidekiq.queue.latency_ms'
 
       if ENV['REDIS_NAMESPACE']
-        Sidekiq.configure_client do |config|
+        ::Sidekiq.configure_client do |config|
           config.redis = { namespace: ENV['REDIS_NAMESPACE'] }
         end
       end
