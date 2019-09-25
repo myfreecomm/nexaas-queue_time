@@ -10,6 +10,12 @@ module Nexaas
     class Sidekiq
       METRIC_NAME = 'sidekiq.queue.latency_ms'
 
+      if ENV['REDIS_NAMESPACE']
+        Sidekiq.configure_client do |config|
+          config.redis = { namespace: ENV['REDIS_NAMESPACE'] }
+        end
+      end
+
       def self.measure_latency
         ::Sidekiq::Queue.all.each do |queue|
           latency_in_ms = (queue.latency * 1000).ceil
