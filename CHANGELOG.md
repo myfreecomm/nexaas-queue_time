@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2019-09-25
+
+### Fixed
+
+- Properly unscope Sidekiq class
+
 ## [0.5.0] - 2019-09-25
 
 ### Added
